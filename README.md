@@ -95,3 +95,27 @@ Statut
 Profil utilisateur (optionnel)
 
 Modifier ses infos personnelles.
+
+
+
+architecture du projet
+/backend
+   |-- server.js  (Node + Express API)
+   |-- models/    (Mongoose models : User, Task)
+   |-- routes/    (Routes API : /tasks, /users)
+   |-- controllers/ (Logique des routes)
+   |-- config/    (Connexion MongoDB, JWT)
+
+/frontend
+   |-- src/
+       |-- App.js
+       |-- components/ (Navbar, TaskForm, TaskList, LoginForm, etc.)
+       |-- pages/ (Login, Register, Dashboard)
+       |-- services/ (API calls avec Axios ou Fetch)
+
+
+  Langage principal : JavaScript (frontend + backend).
+
+Base de données : MongoDB avec Mongoose.
+
+Interfaces : Inscription, Connexion, Dashboard avec gestion des tâches.
