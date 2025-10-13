@@ -1,97 +1,100 @@
 import React, { useState, useEffect } from "react";
-import image1 from "../assets/image1.jpg";
-import image2 from "../assets/image2.jpg";
-import image3 from "../assets/image3.jpg";
 
-const carouselItems = [
+const slides = [
   {
-    img: image1,
-    title: "Fauteuil moderne",
-    description: "Un fauteuil confortable pour votre salon.",
-    price: "$120",
+    src: "https://cache.marieclaire.fr/data/photo/w1000_ci/6d/objet-deco-a-poser-tendance.jpg",
+    title: "Meilleure Décoration",
+    description:
+      "Apportez une touche d'élégance à votre intérieur avec nos décorations exclusives.",
+    button: "Découvrir",
   },
   {
-    img: image2,
-    title: "Tableau abstrait",
-    description: "Tableau moderne pour décorer vos murs.",
-    price: "$250",
+    src: "https://m.media-amazon.com/images/I/71nkJsBocGS._AC_SL1500_.jpg",
+    title: "Feuilles Murales",
+    description:
+      "Transformez vos murs avec des décorations modernes et uniques.",
+    button: "Voir plus",
   },
   {
-    img: image3,
-    title: "Miroir rond",
-    description: "Miroir décoratif pour embellir vos murs.",
-    price: "$450",
+    src: "https://m.media-amazon.com/images/I/51SCAO+YwFS._UF1000,1000_QL80_.jpg",
+    title: "Style & Élégance",
+    description:
+      "Découvrez l’harmonie parfaite entre design et raffinement.",
+    button: "Explorer",
   },
 ];
 
 const Carousel = () => {
   const [current, setCurrent] = useState(0);
+  const length = slides.length;
 
-  // Changement automatique de slide toutes les 4 secondes
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % carouselItems.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [length]);
 
-  const nextSlide = () =>
-    setCurrent((prev) => (prev + 1) % carouselItems.length);
-  const prevSlide = () =>
-    setCurrent((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
+  const nextSlide = () => setCurrent((prev) => (prev + 1) % length);
+  const prevSlide = () => setCurrent((prev) => (prev - 1 + length) % length);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gray-50">
-      {/* Slide Content */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-full px-10">
-        {/* Image */}
-        <div className="w-full md:w-1/2 flex justify-center">
+    <div className="relative w-full" style={{ height: "calc(100vh - 73px)" }}>
+      {slides.map((slide, index) => (
+        <div
+          key={index}
+          className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${
+            index === current ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {/* Image */}
           <img
-            src={carouselItems[current].img}
-            alt={carouselItems[current].title}
-            className="w-full h-96 md:h-[500px] object-cover rounded-xl shadow-md transform transition-transform duration-700 hover:scale-105"
+            src={slide.src}
+            alt={slide.title}
+            className="w-full h-full object-cover"
           />
-        </div>
 
-        {/* Description */}
-        <div className="w-full md:w-1/2 text-center md:text-left text-white md:text-black p-5 md:p-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#b48456] mb-4">
-            {carouselItems[current].title}
-          </h2>
-          <p className="text-lg md:text-xl mb-4">{carouselItems[current].description}</p>
-          <p className="text-2xl font-semibold text-[#b48456] mb-6">
-            {carouselItems[current].price}
-          </p>
-          <button className="px-6 py-3 border-2 border-[#b48456] text-[#b48456] font-semibold rounded-full transition-all duration-300 hover:bg-[#b48456] hover:text-white">
-            Acheter maintenant
-          </button>
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center px-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg tracking-wide">
+              {slide.title}
+            </h2>
+            <p className="text-base md:text-lg text-gray-200 max-w-2xl mb-6 leading-relaxed">
+              {slide.description}
+            </p>
+            <button className="px-8 py-3 bg-[#b48456] text-white rounded-full font-semibold hover:bg-[#a07346] transition duration-300 shadow-lg hover:shadow-2xl">
+              {slide.button}
+            </button>
+          </div>
         </div>
-      </div>
+      ))}
 
-      {/* Contrôles */}
+      {/* Flèches de navigation */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-4 -translate-y-1/2 bg-[#b48456]/80 text-white rounded-full p-3 hover:bg-[#b48456] transition"
+        className="absolute top-1/2 left-6 transform -translate-y-1/2 bg-[#b48456]/70 hover:bg-[#b48456] text-white rounded-full p-3 transition shadow-lg"
       >
         ❮
       </button>
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-4 -translate-y-1/2 bg-[#b48456]/80 text-white rounded-full p-3 hover:bg-[#b48456] transition"
+        className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-[#b48456]/70 hover:bg-[#b48456] text-white rounded-full p-3 transition shadow-lg"
       >
         ❯
       </button>
 
-      {/* Indicateurs */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-3">
-        {carouselItems.map((_, index) => (
+      {/* Points de navigation */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-3">
+        {slides.map((_, index) => (
           <div
             key={index}
             onClick={() => setCurrent(index)}
-            className={`h-3 w-3 rounded-full cursor-pointer transition-all duration-300 ${
-              current === index ? "bg-[#b48456]" : "bg-gray-300"
+            className={`w-3.5 h-3.5 rounded-full cursor-pointer transition-all duration-300 ${
+              current === index
+                ? "bg-[#b48456] scale-110"
+                : "bg-white/60 hover:bg-[#b48456]/60"
             }`}
-          ></div>
+          />
         ))}
       </div>
     </div>
