@@ -1,5 +1,5 @@
 
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: [String],
       enum: ["admin", "client"],
-      default: ["client"],
+      default: "client",
     },
   },
   { timestamps: true } // ajoute createdAt et updatedAt automatiquement
@@ -53,6 +53,7 @@ const validateRegister = (data) => {
     name: Joi.string().required().label(" name"),
     email:     Joi.string().email().required().label("Email"),
     password:  Joi.string().min(6).required().label("Password"),
+    role:      Joi.string().valid("admin", "client").label("Role"),
   });
   return schema.validate(data);
 };
@@ -62,6 +63,7 @@ const validateLogin = (data) => {
   const schema = Joi.object({
     email:    Joi.string().email().required().label("Email"),
     password: Joi.string().min(6).required().label("Password"),
+    
   });
   return schema.validate(data);
 };
