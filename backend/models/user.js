@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
       default: "https://cdn-icons-png.flaticon.com/512/149/149071.png", // image par défaut
     },
     role: {
-      type: [String],
+      type: String,
       enum: ["admin", "client"],
       default: "client",
     },
