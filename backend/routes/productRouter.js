@@ -1,4 +1,6 @@
 const express = require("express");
+const auth = require("../middlewares/authRole");
+const validateToken = require("../middlewares/validateToken");
 const router = express.Router();
 const {
   createProduct,
@@ -11,12 +13,12 @@ const {
 
 // Routes publiques
 router.get("/", getAllProducts);
-router.get("/by-category", getProductsByCategory);
+router.get("/:category", getProductsByCategory);
 router.get("/:id", getOneProduct);
 
 // Routes protégées (à protéger avec middleware admin)
-router.post("/", createProduct);
-router.put("/:id", updateProduct);
-router.delete("/:id", deleteProduct);
+router.post("/", createProduct , auth(["admin"]), validateToken);
+router.put("/:id", updateProduct , auth , validateToken );
+router.delete("/:id", deleteProduct ,  auth ,validateToken);
 
 module.exports = router;

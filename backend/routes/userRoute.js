@@ -9,6 +9,6 @@ const { register, login, getProfile, updateProfile } = require("../controllers/u
 router.post("/register", register);
 router.post("/login", login);
 router.get("/profile", getProfile ,validateToken);
-router.put("/profile/:id", updateProfile ,validateToken);
+router.put("/profile", updateProfile ,validateToken);
 
 module.exports = router;

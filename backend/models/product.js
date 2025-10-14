@@ -56,11 +56,9 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: "Non spécifié",
     },
-    dimensions: {
-      height: { type: Number },
-      width: { type: Number },
-      depth: { type: Number },
-      unit: { type: String, default: "cm" },
+    featured: {
+      type: Boolean,
+      default: false,
     },
    
   },

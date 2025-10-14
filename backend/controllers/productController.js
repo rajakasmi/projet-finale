@@ -13,7 +13,7 @@ const createProduct = async (req, res) => {
       subCategory,
       material,
       color,
-      dimensions,
+      featured,
     } = req.body;
 
     // Validation manuelle minimale
@@ -34,7 +34,8 @@ const createProduct = async (req, res) => {
       subCategory,
       material,
       color,
-      dimensions,
+      featured,
+
     });
 
     await product.save();
