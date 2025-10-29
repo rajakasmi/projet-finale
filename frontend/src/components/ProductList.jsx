@@ -1,45 +1,81 @@
-import React from "react";
-import ProductCard from "./ProductCard";
-
-// Example data (replace with your API or state)
-const products = [
-  {
-    id: 1,
-    name: "Modern Table Lamp",
-    description: "A stylish lamp to brighten your living room.",
-    price: 89.99,
-    image: "https://img.freepik.com/photos-gratuite/cadre-photo-pres-fauteuil-velours_53876-132788.jpg?semt=ais_hybrid&w=740&q=80",
-  },
-  {
-    id: 2,
-    name: "Wooden Wall Clock",
-    description: "Elegant wooden clock with minimal design.",
-    price: 49.99,
-    image: "https://img.freepik.com/photos-gratuite/cadre-photo-pres-fauteuil-velours_53876-132788.jpg?semt=ais_hybrid&w=740&q=80",
-  },
-  {
-    id: 3,
-    name: "Ceramic Vase",
-    description: "Handcrafted ceramic vase perfect for decor.",
-    price: 29.99,
-    image: "https://img.freepik.com/photos-gratuite/cadre-photo-pres-fauteuil-velours_53876-132788.jpg?semt=ais_hybrid&w=740&q=80",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function ProductList() {
+  const { category, subcategory } = useParams(); 
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`http://localhost:5000/api/products/${category}/${subcategory}`)
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Erreur chargement produits :", err);
+        setLoading(false);
+      });
+  }, [category, subcategory]);
+
   return (
-    <section className="py-10 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          Our Products
+    <div className="min-h-screen bg-[#fffaf3] py-16 px-6">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#b48456] mb-8 capitalize">
+          {subcategory ? subcategory.replace("-", " ") : category}
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {loading ? (
+          <p className="text-gray-600 text-lg">Chargement des produits...</p>
+        ) : products.length === 0 ? (
+          <p className="text-gray-600 text-lg">
+            Aucun produit trouvé pour cette catégorie.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {products.map((product) => (
+              <div
+                key={product._id}
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden"
+              >
+                <img
+                  src={
+                    product.image
+                      ? `http://localhost:5000/uploads/${product.image}`
+                      : "https://via.placeholder.com/300x200?text=Image+non+disponible"
+                  }
+                  alt={product.name}
+                  className="w-full h-52 object-cover"
+                />
+
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 line-clamp-2 mb-2">
+                    {product.description}
+                  </p>
+                  <p className="text-[#b48456] font-bold text-lg">
+                    {product.price} €
+                  </p>
+
+                  <div className="mt-3 flex justify-between items-center">
+                    <button className="bg-[#b48456] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#9a6d3c] transition">
+                      Ajouter au panier
+                    </button>
+                    <button className="text-[#b48456] font-medium text-sm hover:underline">
+                      Détails
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 }

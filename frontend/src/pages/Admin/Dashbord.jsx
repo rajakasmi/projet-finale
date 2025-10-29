@@ -1,11 +1,12 @@
 import React from 'react'
 
-const AuthContext = () => {
+const Dashbord = () => {
   return (
     <div>
+        Admin Dashbord
       
     </div>
   )
 }
 
-export default AuthContext
+export default Dashbord
