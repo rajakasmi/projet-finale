@@ -8,7 +8,7 @@ const { register, login, getProfile, updateProfile } = require("../controllers/u
     // Routes
 router.post("/register", register);
 router.post("/login", login);
-router.get("/profile", getProfile ,validateToken);
-router.put("/profile", updateProfile ,validateToken);
+router.get("/profile",validateToken, getProfile );
+router.put("/profile",validateToken,updateProfile );
 
 module.exports = router;

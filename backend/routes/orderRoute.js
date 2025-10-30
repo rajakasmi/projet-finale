@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { createOrder, getOneOrder, getAllOrders } = require("../controllers/orderController");
+const { createOrder, getOneOrder, getAllOrders, updateOrder, getMyOrders } = require("../controllers/orderController");
+const validateToken = require("../middlewares/validateToken");
 
-// POST - Créer une commande
-router.post("/", createOrder);
+router.post("/",validateToken, createOrder);
+router.get("/:id",validateToken, getOneOrder);
+router.get("/",validateToken, getAllOrders);
+router.put("/:id",validateToken, updateOrder);
+router.get("/",validateToken, getMyOrders);
 
-// GET - Récupérer une commande par ID
-router.get("/:id", getOneOrder);
-
-// GET - Récupérer toutes les commandes
-router.get("/", getAllOrders);
 
 module.exports = router;

@@ -7,11 +7,11 @@ const register = async (req, res) => {
   try {
     const { error } = validateRegister(req.body);
     if (error)
-      return res.status(400).send({ message: error.details[0].message });
+      return res.status(400).json({ message: error.details[0].message });
 
     let user = await User.findOne({ email: req.body.email });
     if (user)
-      return res.status(409).send({ message: "User with given email already exists!" });
+      return res.status(409).json({ message: "User with given email already exists!" });
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -19,10 +19,12 @@ const register = async (req, res) => {
     user = new User({ ...req.body, password: hashPassword });
     await user.save();
 
-    res.status(201).send({ message: "Registration successful" });
+    const token = user.generateAuthToken();
+
+    res.status(201).json({ message: "Registration successful", user, token });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -31,49 +33,35 @@ const login = async (req, res) => {
   try {
     const { error } = validateLogin(req.body);
     if (error)
-      return res.status(400).send({ message: error.details[0].message });
+      return res.status(400).json({ message: error.details[0].message });
 
     const user = await User.findOne({ email: req.body.email });
     if (!user)
-      return res.status(401).send({ message: "Invalid email or password." });
+      return res.status(401).json({ message: "Invalid email or password." });
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword)
-      return res.status(401).send({ message: "Invalid email or password." });
+      return res.status(401).json({ message: "Invalid email or password." });
 
     const token = user.generateAuthToken();
 
-    res.status(200).send({ data: token, user, message: "Logged in successfully" });
+    res.status(200).json({ token, user, message: "Logged in successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // Middleware d’authentification JWT
-const auth = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
-  if (!token)
-    return res.status(401).send({ message: "Access denied. No token provided." });
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Contient _id, email, role
-    next();
-  } catch (err) {
-    return res.status(400).send({ message: "Invalid token." });
-  }
-};
 
 // Récupérer le profil
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
-    if (!user) return res.status(404).send({ message: "User not found" });
-    res.status(200).send(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(200).json(req.user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -96,16 +84,17 @@ const updateProfile = async (req, res) => {
       new: true,
     }).select("-password");
 
-    if (!updatedUser) return res.status(404).send({ message: "User not found" });
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
 
-    res.status(200).send({
+    res.status(200).json({
       user: updatedUser,
       message: "Profile updated successfully",
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-module.exports = { register, login, getProfile, updateProfile, auth };
+module.exports = { register, login, getProfile, updateProfile };

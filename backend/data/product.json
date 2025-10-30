@@ -1,0 +1,190 @@
+[
+  {
+    "name": "Lampe de table moderne",
+    "description": "Lampe en métal avec abat-jour tissu, idéale pour le salon ou la chambre.",
+    "price": 89.99,
+    "images": [
+      "https://m.media-amazon.com/images/I/61TxsM+x4gL.jpg",
+      "https://img.freepik.com/photos-gratuite/vue-lampe-photorealiste-moderne_23-2151038905.jpg?semt=ais_hybrid&w=740&q=80"
+    ],
+    "stock": 15,
+    "category": "Luminaires",
+    "subCategory": "Lampes",
+    "material": "Métal et tissu",
+    "color": "Noir",
+    "featured": true,
+    "onSale": true,
+    "salePrice": 69.99,
+    "saleStartDate": "2025-10-01",
+    "saleEndDate": "2025-11-01",
+    "timeStamp": "2025-09-20T10:30:00Z"
+  },
+  {
+    "name": "Suspension décorative LED",
+    "description": "Suspension design en aluminium avec éclairage LED intégré.",
+    "price": 129.99,
+    "images": [
+      "https://m.media-amazon.com/images/I/41baTfLabfL._AC_SY350_.jpg"
+    ],
+    "stock": 10,
+    "category": "Luminaires",
+    "subCategory": "Suspensions",
+    "material": "Aluminium",
+    "color": "Argent",
+    "featured": true,
+    "onSale": false,
+    "salePrice": null,
+    "saleStartDate": null,
+    "saleEndDate": null,
+    "timeStamp": "2025-09-18T14:45:00Z"
+
+
+  },
+  {
+    "name": "Lampadaire minimaliste",
+    "description": "Lampadaire à lumière douce, parfait pour une ambiance cosy.",
+    "price": 159.90,
+    "images": ["https://m.media-amazon.com/images/I/71C+70NjdIL.jpg"],
+    "stock": 8,
+    "category": "Luminaires",
+    "subCategory": "Lampadaires",
+    "material": "Métal",
+    "color": "Blanc",
+    "featured": false,
+    "onSale": true, 
+    "salePrice": 139.90,
+    "saleStartDate": "2025-09-15",
+    "saleEndDate": "2025-10-15",
+    "timeStamp": "2025-09-19T09:20:00Z"
+
+
+  }
+]
+
+[
+  {
+    "name": "Lampe de table moderne",
+    "description": "Lampe en métal avec abat-jour tissu, idéale pour le salon ou la chambre.",
+    "price": 89.99,
+    "images": [
+      "https://example.com/lampe1.jpg",
+      "https://example.com/lampe1-2.jpg"
+    ],
+    "stock": 15,
+    "category": "Luminaires",
+    "subCategory": "Lampes",
+    "material": "Métal et tissu",
+    "color": "Noir",
+    "featured": true,
+    "onSale": true,
+    "salePrice": 69.99,
+    "saleStartDate": "2025-10-01",
+    "saleEndDate": "2025-11-01",
+    "timeStamp":  "2025-09-20T10:30:00Z"
+  },
+  {
+    "name": "Suspension décorative LED",
+    "description": "Suspension design en aluminium avec éclairage LED intégré.",
+    "price": 129.99,
+    "images": [
+      "https://example.com/suspension1.jpg"
+    ],
+    "stock": 10,
+    "category": "Luminaires",
+    "subCategory": "Suspensions",
+    "material": "Aluminium",
+    "color": "Argent"
+  },
+  {
+    "name": "Lampadaire minimaliste",
+    "description": "Lampadaire à lumière douce, parfait pour une ambiance cosy.",
+    "price": 159.90,
+    "images": ["https://example.com/lampadaire1.jpg"],
+    "stock": 8,
+    "category": "Luminaires",
+    "subCategory": "Lampadaires",
+    "material": "Métal",
+    "color": "Blanc"
+  }
+]
+//////////////////////////////////
+[
+  {
+    "name": "Tableau décoratif abstrait",
+    "description": "Tableau moderne avec peinture acrylique sur toile.",
+    "price": 99.99,
+    "images": ["https://m.media-amazon.com/images/I/714aEhWATxL.jpg"],
+    "stock": 12,
+    "category": "Décoration murale",
+    "subCategory": "Tableaux décoratifs",
+    "material": "Toile",
+    "color": "Multicolore",
+    "featured": true,
+    "onSale": false,
+    "salePrice": null,
+    "saleStartDate": null,
+    "saleEndDate": null,
+    "timeStamp": "2025-09-17T11:15:00Z"
+  },
+  {
+    "name": "Miroir mural rond",
+    "description": "Miroir avec cadre en bois, parfait pour l’entrée.",
+    "price": 79.50,
+    "images": ["https://m.media-amazon.com/images/I/71NZSWF8JhL.jpg"],
+    "stock": 20,
+    "category": "Décoration murale",
+    "subCategory": "Miroirs muraux",
+    "material": "Bois",
+    "color": "Chêne clair",
+    "featured": false,
+    "onSale": true,
+    "salePrice": 59.50,
+    "saleStartDate": "2025-09-20",
+    "saleEndDate": "2025-10-20",
+    "timeStamp": "2025-09-19T13:00:00Z"
+  },
+  {
+    "name": "Cadre photo élégant",
+    "description": "Cadre photo en métal doré pour sublimer vos souvenirs.",
+    "price": 24.90,
+    "images": ["https://img.freepik.com/psd-premium/element-conception-cadre-orne-or-style-baroque-classique-luxueux-bordure-decorative-elegante-dessin-rouleaux-vintage-art-deco-image_632498-27568.jpg?w=360"],
+    "stock": 30,
+    "category": "Décoration murale",
+    "subCategory": "Cadres élégants",
+    "material": "Métal",
+    "color": "Doré",
+    "featured": true,
+    "onSale": false,
+    "salePrice": null,
+    "saleStartDate": null,
+    "saleEndDate": null,
+    "timeStamp": "2025-09-16T15:45:00Z"
+  }
+]
+//////////////////////////////////////////////////////////////
+catégories
+[
+  {
+    "name": "Luminaires",
+    "description": "Lampes, suspensions et éclairages modernes pour toutes les pièces.",
+    "images": [
+      "https://spacenet.tn/119870-large_default/lampe-suspension-doree.jpg",
+      "https://m.media-amazon.com/images/I/61Vr5clUXIL._AC_UF1000,1000_QL80_.jpg"
+    ]
+  },
+  {
+    "name": "Décoration murale",
+    "description": "Tableaux, miroirs et décorations pour embellir les murs.",
+    "images": [
+      "https://m.media-amazon.com/images/I/71nkJsBocGS._AC_SL1500_.jpg",
+      "https://img5.su-cdn.com/cdn-cgi/image/width=480,height=480/mall/file/2022/08/03/e8386dc1f807c44d07cdcec94ac82917.jpg"
+    ]
+  },
+  {
+  "name": "Objets décoratifs",
+  "description": "Articles décoratifs tendance tels que statues, figurines, horloges, et pièces d’art uniques.",
+  "images": [
+    "https://example.com/objets-decoratifs1.jpg",
+    "https://example.com/objets-decoratifs2.jpg"
+  ]
+}]

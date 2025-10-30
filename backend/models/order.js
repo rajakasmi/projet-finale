@@ -24,10 +24,41 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    address: {
-      type: String,
-      required: true,
+
+    shippingAddress: {
+      fullName: {
+        type: String,
+        required: [true, "Le nom complet est obligatoire"],
+      },
+      address: {
+        type: String,
+        required: [true, "L'adresse est obligatoire"],
+      },
+      telephone: {
+        type: String,
+        required: [true, "Le numéro de téléphone est obligatoire"],
+      },
+      country: {
+        type: String,
+        required: [true, "Le pays est obligatoire"],
+      },
+      city: {
+        type: String,
+        required: [true, "La ville est obligatoire"],
+      },
+      postalCode: {
+        type: String,
+        required: [true, "Le code postal est obligatoire"],
+      },
     },
+
+    // ✅ Méthode de paiement
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "credit_card", "paypal"],
+      default: "cash",
+    },
+
     status: {
       type: String,
       enum: ["en attente", "en cours", "livrée", "annulée"],

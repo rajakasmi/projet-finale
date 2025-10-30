@@ -34,15 +34,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        // Luminaires
         "Lampes",
         "Suspensions",
         "Lampadaires",
-        // Décoration murale
         "Tableaux décoratifs",
         "Miroirs muraux",
         "Cadres élégants",
-        // Objets déco
         "Vases design",
         "Statues d’intérieur",
         "Bougies parfumées",
@@ -60,7 +57,23 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-   
+
+    // 🟢 Nouveau champ : produit en solde
+    onSale: {
+      type: Boolean,
+      default: false, // false = pas en solde
+    },
+    salePrice: {
+      type: Number,
+      min: 0,
+      
+    },
+    saleStartDate: {
+      type: Date,
+    },
+    saleEndDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

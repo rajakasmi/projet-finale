@@ -1,24 +1,28 @@
 const jwt = require("jsonwebtoken");
+const { User } = require("../models/user");
 
-const validateToken = (req, res, next) => {
+const validateToken = async (req, res, next) => {
   try {
-    // Récupération du token depuis le header Authorization
-    const authHeader = req.header("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Access denied. No token provided." });
+    let token;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1];
     }
-
-    const token = authHeader.split(" ")[1];
-
-    // Vérification et décodage du token
+    if (!token) {
+      return res.status(401).json({ message: "Not authorized, no token" });
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attache l'utilisateur décodé à la requête
-    req.user = decoded; // contient _id, email, role
+    req.user = await User.findById(decoded._id).select("-password");
+
+    if (!req.user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
     next();
   } catch (error) {
-    console.error("Token validation error:", error.message);
-    return res.status(403).json({ message: "Invalid or expired token." });
+    console.error(error);
+    return res.status(401).json({ message: "Not authorized, invalid token" });
   }
 };
 
