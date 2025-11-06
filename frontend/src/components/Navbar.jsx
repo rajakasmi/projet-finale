@@ -4,6 +4,8 @@ import { Menu, X, ShoppingCart, User, Search, LogOut } from "lucide-react";
 import logo from "../assets/logo.jpg";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useData } from "../context/DataContext";
+
 
  const menuItems = [
   {
@@ -44,6 +46,9 @@ const Navbar = () => {
   const { cartItems } = useCart();
   const { user, logout } = useAuth(); 
   const [profileMenu, setProfileMenu] = useState(false); 
+  const { products } = useData();
+const [results, setResults] = useState([]);
+const [showDropdown, setShowDropdown] = useState(false);
 
   
   const handleMouseEnter = (key) => {
@@ -112,16 +117,60 @@ const Navbar = () => {
         
         <div className="flex items-center space-x-4 relative">
           
-          <div className="hidden md:flex items-center border border-gray-300 rounded-full px-3 py-1 focus-within:ring-2 focus-within:ring-[#b48456] transition">
-            <Search size={18} className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Rechercher..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="ml-2 w-40 outline-none text-sm text-gray-700 placeholder-gray-400"
-            />
-          </div>
+        <div className="relative hidden md:flex items-center border border-gray-300 rounded-full px-3 py-1 focus-within:ring-2 focus-within:ring-[#b48456] transition">
+  <Search size={18} className="text-gray-500" />
+
+  <input
+    type="text"
+    placeholder="Rechercher..."
+    value={searchValue}
+    onChange={(e) => {
+      const value = e.target.value;
+      setSearchValue(value);
+
+      if (value.trim() === "") {
+        setResults([]);
+        setShowDropdown(false);
+      } else {
+        const filtered = products.filter((p) =>
+          p.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setResults(filtered);
+        setShowDropdown(true);
+      }
+    }}
+    className="ml-2 w-40 outline-none text-sm text-gray-700 placeholder-gray-400"
+  />
+
+  {/* DROPDOWN RESULT */}
+  {showDropdown && results.length > 0 && (
+    <div className="absolute top-10 left-0 w-full bg-white border shadow-lg rounded-lg max-h-60 overflow-auto z-50">
+      {results.map((product) => (
+        <Link
+          key={product._id}
+          to={`/product/${product._id}`}
+          onClick={() => setShowDropdown(false)}
+          className="flex items-center gap-2 p-2 hover:bg-[#b48456]/10"
+        >
+          <img
+            src={product.images?.[0]}
+            alt={product.name}
+            className="w-10 h-10 object-cover rounded"
+          />
+          <span className="text-sm text-gray-700">{product.name}</span>
+        </Link>
+      ))}
+    </div>
+  )}
+
+  {/* SI AUCUN RESULTAT */}
+  {showDropdown && results.length === 0 && searchValue && (
+    <div className="absolute top-10 left-0 w-full bg-white border shadow-lg rounded-lg p-2 text-sm text-gray-500 z-50">
+      Aucun produit trouvé
+    </div>
+  )}
+</div>
+
 
           
           <Link to="/cart">

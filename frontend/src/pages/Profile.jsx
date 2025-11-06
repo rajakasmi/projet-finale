@@ -3,39 +3,48 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
   const { user, getProfile, updateProfile } = useAuth();
-  const [name, setName] = useState(""); // Nom complet
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(""); // pour l’aperçu
+  const [file, setFile] = useState(null); // pour envoyer au serveur
   const [loading, setLoading] = useState(true);
 
- useEffect(() => {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const data = await getProfile();
+      if (data) {
+        setName(data.name || "");
+        setEmail(data.email || "");
+        setImage(data.image || "");
+      }
+      setLoading(false);
+    };
+    fetchProfile();
+  }, []);
 
-  const fetchProfile = async () => {
-    const data = await getProfile();
-    if (data) {
-      setName(data.name || "");
-      setEmail(data.email || "");
-      setImage(data.image || "");
+  const handleFileChange = (e) => {
+    const selected = e.target.files[0];
+    if (selected) {
+      setFile(selected);
+      setImage(URL.createObjectURL(selected)); // preview image
     }
-    setLoading(false);
   };
-  fetchProfile();
-}, [])
 
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    const success = await updateProfile({
-      name,      // 🔹 Champ unique pour le backend
-      email,
-      password,
-      image,
-    });
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    if (password) formData.append("password", password);
+    if (file) formData.append("image", file); // ✅ envoyer le fichier
+
+    const success = await updateProfile(formData, true); // true = multipart
 
     if (success) {
       alert("Profil mis à jour ✅");
-      setPassword(""); // nettoyer le champ mot de passe
+      setPassword("");
     } else {
       alert("Erreur lors de la mise à jour ❌");
     }
@@ -43,11 +52,7 @@ export default function Profile() {
 
   if (loading) return <p className="text-center mt-20 text-gray-700">Chargement...</p>;
   if (!user)
-    return (
-      <p className="text-center mt-20 text-gray-700">
-        Connectez-vous pour voir votre profil.
-      </p>
-    );
+    return <p className="text-center mt-20 text-gray-700">Connectez-vous pour voir votre profil.</p>;
 
   return (
     <div className="max-w-2xl mx-auto mt-24 p-8 bg-white rounded-2xl shadow-xl border border-[#b48456]">
@@ -56,19 +61,20 @@ export default function Profile() {
       </h2>
 
       <form onSubmit={handleUpdate} className="space-y-5">
-        {/* Image */}
+
+        {/* IMAGE UPLOAD */}
         <div className="flex flex-col items-center">
           <img
             src={image || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
             alt="Profil"
             className="h-24 w-24 rounded-full object-cover border-2 border-[#b48456] mb-3"
           />
+
           <input
-            type="text"
-            placeholder="URL de l'image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#b48456] focus:outline-none"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2"
           />
         </div>
 
@@ -79,7 +85,7 @@ export default function Profile() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#b48456] focus:outline-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2"
           />
         </div>
 
@@ -90,7 +96,7 @@ export default function Profile() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#b48456] focus:outline-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2"
           />
         </div>
 
@@ -102,16 +108,17 @@ export default function Profile() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Laissez vide pour ne pas changer"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#b48456] focus:outline-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full mt-4 px-5 py-3 border-2 border-[#b48456] text-[#b48456] font-semibold rounded-full text-lg transition-all duration-300 hover:bg-[#b48456] hover:text-white"
+          className="w-full mt-4 px-5 py-3 border-2 border-[#b48456] text-[#b48456] font-semibold rounded-full text-lg hover:bg-[#b48456] hover:text-white transition"
         >
           Mettre à jour
         </button>
+
       </form>
     </div>
   );

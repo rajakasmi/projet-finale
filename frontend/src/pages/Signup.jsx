@@ -51,7 +51,7 @@ export default function Signup() {
         {/* Section Image */}
         <div className="hidden md:flex md:w-1/2">
           <img
-            src="https://cdn-images.farfetch-contents.com/18/26/96/21/18269621_39540539_600.jpg"
+            src="https://www.ekohunters.com/wp-content/uploads/2023/02/arc-deco-style-2.jpg"
             alt="Inscription"
             className="w-full h-full object-cover"
           />

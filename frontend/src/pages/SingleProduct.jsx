@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 const SingleProduct = () => {
    const { addToCart } = useCart();
@@ -10,6 +11,7 @@ const SingleProduct = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -125,7 +127,14 @@ const SingleProduct = () => {
             {/* BOUTONS */}
             <div className="flex gap-4">
               <button
-               onClick={() => addToCart({...product ,id: product._id} )}
+               onClick={() =>{
+                  if (!user) {
+                    navigate("/signin"); }
+                    else{
+                      addToCart({...product ,id: product._id} )}
+                }}
+                
+               
               className="bg-[#b48456] text-white px-6 py-2 rounded-full hover:bg-[#a37245] transition">
                 Ajouter au panier
               </button>
