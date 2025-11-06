@@ -1,4 +1,4 @@
-const { User, validateRegister, validateLogin } = require("../models/user");
+const { User, validateRegister, validateLogin } = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -64,16 +64,31 @@ const getProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// backend/controllers/userController.js
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // Exclure le mot de passe
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+
 
 // Mettre à jour le profil
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, password, image } = req.body;
+    const { name, email, password } = req.body;
     const updateData = {};
 
     if (name) updateData.name = name;
     if (email) updateData.email = email;
-    if (image) updateData.image = image;
+
+    // ✅ Si image uploadée via multer
+    if (req.file) {
+      updateData.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    }
 
     if (password) {
       const salt = await bcrypt.genSalt(Number(process.env.SALT));
@@ -97,4 +112,5 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getProfile, updateProfile };
+
+module.exports = { register, login, getProfile,getAllUsers, updateProfile };

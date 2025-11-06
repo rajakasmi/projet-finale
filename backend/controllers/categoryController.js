@@ -1,9 +1,9 @@
-const express = require("express");
 const Category = require("../models/category");
 
+const UPLOADS_DIR = "uploads/"; // ✅ Correction : définir le dossier des images
 
 // ✅ Récupérer toutes les catégories
- const getAllCategories = async (req, res) => {
+const getAllCategories = async (req, res) => {
   try {
     const categories = await Category.find();
     res.status(200).json(categories);
@@ -12,8 +12,8 @@ const Category = require("../models/category");
   }
 };
 
-// ✅ Créer une nouvelle catégorie (optionnel pour tests)
- const createCategory = async (req, res) => {
+// ✅ Créer une catégorie
+const createCategory = async (req, res) => {
   try {
     const { name, description } = req.body;
 
@@ -21,13 +21,15 @@ const Category = require("../models/category");
       return res.status(400).json({ message: "Le nom est obligatoire." });
     }
 
-    // ✅ Si une image a été uploadée
-    const imagePath = req.file ? `/${UPLOADS_DIR}${req.file.filename}` : null;
+    // ✅ Gérer les images uploadées
+    const imagePaths = req.files
+      ? req.files.map((file) => `/${UPLOADS_DIR}${file.filename}`)
+      : [];
 
     const category = new Category({
       name,
       description,
-      images: imagePath ? [imagePath] : [],
+      images: imagePaths,
     });
 
     await category.save();
@@ -41,7 +43,23 @@ const Category = require("../models/category");
     res.status(500).json({ message: "Erreur lors de la création", error });
   }
 };
-module.exports = {  
-    getAllCategories,
-    createCategory
-};  
+
+// ✅ Supprimer une catégorie
+const deleteCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findByIdAndDelete(id);
+    if (!category)
+      return res.status(404).json({ message: "Catégorie introuvable" });
+
+    res.status(200).json({ message: "✅ Catégorie supprimée avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la suppression", error });
+  }
+};
+
+module.exports = {
+  getAllCategories,
+  createCategory,
+  deleteCategory,
+};

@@ -5,4 +5,4 @@ const auth = (req, res, next) => {
     return res.status(403).json({ message: "Access denied: Admin only" });
   }
 };
-module.exports=auth
+module.exports= {auth}

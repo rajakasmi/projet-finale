@@ -84,6 +84,40 @@ const getAllOrders = async (req, res) => {
     res.status(500).json({ message: "Erreur interne du serveur" });
   }
 };
+// ✅ Mettre à jour uniquement le statut d'une commande
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ message: "Le statut est requis ❌" });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true }
+    )
+      .populate("userId", "name email")
+      .populate("products.productId", "name price images");
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Commande non trouvée ❌" });
+    }
+
+    res.status(200).json({
+      message: "Statut de la commande mis à jour avec succès ✅",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut:", error);
+    res.status(500).json({
+      message: "Erreur interne lors de la mise à jour du statut de la commande",
+    });
+  }
+};
+ 
 
 // ✅ Mettre à jour une commande (ex: statut, adresse, paiement, etc.)
 const updateOrder = async (req, res) => {
@@ -120,4 +154,5 @@ module.exports = {
   getAllOrders,
   updateOrder,
   getMyOrders,
+  updateOrderStatus,
 };

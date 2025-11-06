@@ -92,16 +92,16 @@ const getOneProduct = async (req, res) => {
 /* 🟣 METTRE À JOUR UN PRODUIT                                                */
 /* -------------------------------------------------------------------------- */
 const updateProduct = async (req, res) => {
-  try {
+ try {
     const productId = req.params.id;
     const updateData = { ...req.body, updatedAt: Date.now() };
 
-    // ✅ Si nouvelles images uploadées
+    // ✅ Si de nouvelles images ont été uploadées
     if (req.files && req.files.length > 0) {
       const newImages = req.files.map((file) => `/${UPLOADS_DIR}${file.filename}`);
       updateData.images = newImages;
 
-      // 🔥 Supprimer les anciennes images
+      // 🧹 Supprimer les anciennes images
       const oldProduct = await Product.findById(productId);
       if (oldProduct && oldProduct.images && oldProduct.images.length > 0) {
         oldProduct.images.forEach((imgPath) => {
@@ -116,7 +116,7 @@ const updateProduct = async (req, res) => {
     });
 
     if (!updatedProduct) {
-      return res.status(404).json({ message: "Produit non trouvé." });
+      return res.status(404).json({ message: "Produit non trouvé" });
     }
 
     res.status(200).json({
@@ -124,8 +124,8 @@ const updateProduct = async (req, res) => {
       product: updatedProduct,
     });
   } catch (error) {
-    console.error("❌ Erreur update produit:", error);
-    res.status(500).json({ message: "Erreur lors de la mise à jour du produit" });
+    console.error("Erreur update product:", error);
+    res.status(500).json({ message: "Erreur serveur", error });
   }
 };
 
