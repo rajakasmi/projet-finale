@@ -1,6 +1,7 @@
 const Category = require("../models/category");
 
-const UPLOADS_DIR = "uploads/"; // ✅ Correction : définir le dossier des images
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // ✅ Récupérer toutes les catégories
 const getAllCategories = async (req, res) => {
@@ -21,15 +22,29 @@ const createCategory = async (req, res) => {
       return res.status(400).json({ message: "Le nom est obligatoire." });
     }
 
-    // ✅ Gérer les images uploadées
-    const imagePaths = req.files
-      ? req.files.map((file) => `/${UPLOADS_DIR}${file.filename}`)
-      : [];
+    let imageUrls = [];
+    let publicIds = [];
+
+    // ✅ Upload images to Cloudinary
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "categories",
+        });
+
+        imageUrls.push(result.secure_url);
+        publicIds.push(result.public_id);
+
+        // 🧹 supprimer fichier local
+        fs.unlinkSync(file.path);
+      }
+    }
 
     const category = new Category({
       name,
       description,
-      images: imagePaths,
+      images: imageUrls,       // ✅ URLs Cloudinary
+      imagePublicId: publicIds // ✅ Public IDs Cloudinary
     });
 
     await category.save();
@@ -43,6 +58,7 @@ const createCategory = async (req, res) => {
     res.status(500).json({ message: "Erreur lors de la création", error });
   }
 };
+
 
 // ✅ Supprimer une catégorie
 const deleteCategory = async (req, res) => {

@@ -1,6 +1,7 @@
 const { User, validateRegister, validateLogin } = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
 
 // Enregistrement
 const register = async (req, res) => {
@@ -52,9 +53,6 @@ const login = async (req, res) => {
   }
 };
 
-// Middleware d’authentification JWT
-
-
 // Récupérer le profil
 const getProfile = async (req, res) => {
   try {
@@ -64,19 +62,17 @@ const getProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// backend/controllers/userController.js
+
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // Exclure le mot de passe
+    const users = await User.find().select("-password");
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
-
-
-// Mettre à jour le profil
+// ✅ Mettre à jour le profil avec Cloudinary
 const updateProfile = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -85,9 +81,17 @@ const updateProfile = async (req, res) => {
     if (name) updateData.name = name;
     if (email) updateData.email = email;
 
-    // ✅ Si image uploadée via multer
+    // ✅ Si une image est envoyée via Cloudinary (multer-storage-cloudinary)
     if (req.file) {
-      updateData.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      // Supprimer ancienne image si elle existe
+      const currentUser = await User.findById(req.user._id);
+      if (currentUser?.image) {
+        const publicId = currentUser.image.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy("products/" + publicId);
+      }
+
+      // Enregistrer la nouvelle image Cloudinary
+      updateData.image = req.file.path; // URL Cloudinary
     }
 
     if (password) {
@@ -106,11 +110,11 @@ const updateProfile = async (req, res) => {
       user: updatedUser,
       message: "Profile updated successfully",
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-
-module.exports = { register, login, getProfile,getAllUsers, updateProfile };
+module.exports = { register, login, getProfile, getAllUsers, updateProfile };

@@ -18,9 +18,11 @@ const productSchema = new mongoose.Schema(
     },
     images: [
       {
-        type: String, // URL ou chemin de l’image
+        type: String,
+        default: null, // URL ou chemin de l’image
       },
     ],
+    imagePublicId:[ String ],
     stock: {
       type: Number,
       default: 0,

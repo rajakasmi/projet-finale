@@ -1,64 +1,49 @@
 const fs = require("fs");
 const path = require("path");
 const Product = require("../models/product");
+const cloudinary = require("cloudinary").v2;
 
 // 📁 Dossier d’upload
-const UPLOADS_DIR = "uploads/";
+
 
 /* -------------------------------------------------------------------------- */
 /* 🟢 CRÉER UN PRODUIT                                                        */
 
 const createProduct = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      stock,
-      category,
-      subCategory,
-      material,
-      color,
-      featured,
-      onSale,
-      salePrice,
-      saleStartDate,
-      saleEndDate,
-    } = req.body;
+    const files = req.files;
+    let imageUrls = [];
+    let publicIds = [];
 
-    if (!name || !description || !price || !category || !subCategory) {
-      return res.status(400).json({ message: "Champs obligatoires manquants." });
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "products",
+        });
+
+        imageUrls.push(result.secure_url);
+        publicIds.push(result.public_id);
+
+        fs.unlinkSync(file.path); // Supprime le fichier local après upload
+      }
     }
 
-    // 🔥 Gestion multiple images
-    const images = req.files
-      ? req.files.map((file) => `/uploads/${file.filename}`)
-      : [];
-
     const product = new Product({
-      name,
-      description,
-      price,
-      stock,
-      category,
-      subCategory,
-      material,
-      color,
-      featured,
-      onSale,
-      salePrice,
-      saleStartDate,
-      saleEndDate,
-      images, // tableau
+      ...req.body,
+      images: imageUrls,         // ✅ tableau d’URLs
+      imagePublicId: publicIds,  // ✅ tableau des public_id
     });
 
-    await product.save();
-    res.status(201).json({ message: "✅ Produit créé avec succès", product });
+    const savedProduct = await product.save();
+    res.status(201).json(savedProduct);
   } catch (error) {
-    console.error("❌ Erreur création produit:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    console.error("Error creating product:", error);
+    res.status(400).json({ message: error.message });
   }
 };
+
+
+
 /* -------------------------------------------------------------------------- */
 /* 🟡 RÉCUPÉRER TOUS LES PRODUITS                                             */
 /* -------------------------------------------------------------------------- */
@@ -92,23 +77,38 @@ const getOneProduct = async (req, res) => {
 /* 🟣 METTRE À JOUR UN PRODUIT                                                */
 /* -------------------------------------------------------------------------- */
 const updateProduct = async (req, res) => {
- try {
+  try {
     const productId = req.params.id;
     const updateData = { ...req.body, updatedAt: Date.now() };
 
-    // ✅ Si de nouvelles images ont été uploadées
     if (req.files && req.files.length > 0) {
-      const newImages = req.files.map((file) => `/${UPLOADS_DIR}${file.filename}`);
-      updateData.images = newImages;
-
-      // 🧹 Supprimer les anciennes images
       const oldProduct = await Product.findById(productId);
-      if (oldProduct && oldProduct.images && oldProduct.images.length > 0) {
-        oldProduct.images.forEach((imgPath) => {
-          const fullPath = path.join(__dirname, "..", imgPath);
-          if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-        });
+
+      // 🧹 Supprimer anciennes images Cloudinary si elles existent
+      if (oldProduct?.imagePublicId?.length) {
+        for (const publicId of oldProduct.imagePublicId) {
+          await cloudinary.uploader.destroy(publicId);
+        }
       }
+
+      // 📤 Upload nouvelles images
+      let imageUrls = [];
+      let publicIds = [];
+
+      for (const file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "products",
+        });
+
+        imageUrls.push(result.secure_url);
+        publicIds.push(result.public_id);
+
+        // 🧹 supprimer fichier local
+        fs.unlinkSync(file.path);
+      }
+
+      updateData.images = imageUrls;
+      updateData.imagePublicId = publicIds;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, {
