@@ -64,16 +64,25 @@ const CategoryAdmin = () => {
   };
 
   // ✅ Supprimer une catégorie
-  const handleDelete = async (id) => {
-    if (!window.confirm("Supprimer cette catégorie ?")) return;
-    try {
-      await axiosInstance.delete(`${API_URL}/${id}`);
-      fetchCategories();
-      setMessage("🗑️ Catégorie supprimée avec succès !");
-    } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
-    }
-  };
+const handleDelete = async (id) => {
+  if (!window.confirm("Supprimer cette catégorie ?")) return;
+
+  try {
+    const token = user?.token || localStorage.getItem("token");
+
+    await axiosInstance.delete(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    fetchCategories();
+    setMessage("🗑️ Catégorie supprimée avec succès !");
+  } catch (error) {
+    console.error("Erreur lors de la suppression :", error);
+    setMessage("❌ Erreur lors de la suppression de la catégorie.");
+  }
+};
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">

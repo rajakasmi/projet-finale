@@ -19,6 +19,7 @@ export default function MyOrder() {
           },
         }
       );
+      console.log("Orders fetched:", res.data);
       setOrders(res.data);
     } catch (error) {
       console.error("Erreur lors du chargement des commandes:", error);
@@ -55,12 +56,14 @@ export default function MyOrder() {
               >
                 <div className="flex justify-between mb-4">
                   <p className="font-semibold text-gray-800 dark:text-white">
-                    Commande n°: {order._id}
+                    Commande n°: {order?._id}
                   </p>
+
                   <p className="text-[#b48456] font-bold">
-                    Total: {order.totalPrice.toFixed(2)} TND
+                    Total: {(order?.totalPrice ?? 0).toFixed(2)} TND
                   </p>
                 </div>
+
 
                 {order.products.map((prod) => (
                   <div
@@ -68,20 +71,19 @@ export default function MyOrder() {
                     className="flex items-center gap-4 border-b pb-3 mb-3"
                   >
                     <img
-                      src={prod.productId.images?.[0]}
-                      alt={prod.productId.name}
+                      src={prod?.productId?.images?.[0] || "https://via.placeholder.com/80"}
+                      alt={prod?.productId?.name || "No name"}
                       className="w-20 h-20 object-cover rounded-lg"
                     />
+
                     <div>
                       <p className="text-gray-800 dark:text-white font-medium">
-                        {prod.productId.name}
+                        {prod?.productId?.name || "Unknown product"}
                       </p>
                       <p className="text-gray-600 dark:text-gray-400">
                         Qté: {prod.quantity}
                       </p>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {prod.productId.price} TND
-                      </p>
+                  
                     </div>
                   </div>
                 ))}
