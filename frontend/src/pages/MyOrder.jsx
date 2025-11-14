@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
 
 export default function MyOrder() {
@@ -11,8 +11,8 @@ export default function MyOrder() {
     if (!user) return;
 
     try {
-      const res = await axios.get(
-        "http://127.0.0.1:5000/api/orders",
+      const res = await axiosInstance.get(
+        "/orders",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,

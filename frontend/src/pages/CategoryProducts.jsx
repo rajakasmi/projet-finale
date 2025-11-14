@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate,useLocation } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 export default function CategoryProducts() {
   const { categoryName } = useParams();
@@ -23,8 +23,8 @@ export default function CategoryProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/products/by-category?category=${categoryName}`
+        const res = await axiosInstance.get(
+          `/products/by-category?category=${categoryName}`
         );
         setProducts(res.data);
         setFilteredProducts(res.data);

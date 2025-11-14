@@ -1,6 +1,6 @@
 // src/context/DataContext.js
 import React, { createContext, useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 // 🟢 Création du contexte
 const DataContext = createContext();
@@ -15,7 +15,7 @@ export const DataProvider = ({ children }) => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/products"); // ⚠️ Mets ici ton URL backend
+      const res = await axiosInstance.get("/products"); // ⚠️ Mets ici ton URL backend
       setProducts(res.data);
       setError(null);
     } catch (err) {

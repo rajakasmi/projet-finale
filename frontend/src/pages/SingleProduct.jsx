@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 
@@ -17,7 +17,7 @@ const SingleProduct = () => {
     const fetchProduct = async () => {
       try {
         // ✅ Si ton API renvoie tous les produits :
-        const res = await axios.get("http://127.0.0.1:5000/api/products");
+        const res = await axiosInstance.get("/products");
 
         // ✅ Trouver le produit avec le même ID que celui dans l’URL
         const foundProduct = res.data.find((p) => p._id === id);

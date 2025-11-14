@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 
@@ -52,8 +52,8 @@ export default function OrderPage() {
         paymentMethod,
       };
 
-      const res = await axios.post(
-        "http://127.0.0.1:5000/api/orders",
+      const res = await axiosInstance.post(
+        "/orders",
         orderData,
         {
           headers: {

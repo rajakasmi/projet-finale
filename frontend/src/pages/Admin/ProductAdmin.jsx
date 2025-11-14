@@ -5,11 +5,11 @@ import {
   PlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 import { useData } from "../../context/DataContext";
 import { useAuth } from "../../context/AuthContext"; // ✅ Pour le token utilisateur
 
-const API_URL = "http://localhost:5000/api/products";
+const API_URL = "/products";
 
 export default function ProductAdmin() {
   const { user } = useAuth(); // ✅ récupère le token JWT
@@ -86,7 +86,7 @@ export default function ProductAdmin() {
     if (!window.confirm("Voulez-vous supprimer ce produit ?")) return;
     try {
       const token = user?.token || localStorage.getItem("token");
-      await axios.delete(`${API_URL}/${id}`, {
+      await axiosInstance.delete(`${API_URL}/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchProducts();
@@ -122,10 +122,10 @@ export default function ProductAdmin() {
 
     if (editingProduct) {
       // ✅ utiliser put avec multipart form
-      await axios.put(`${API_URL}/${editingProduct._id}`, data, { headers });
+      await axiosInstance.put(`${API_URL}/${editingProduct._id}`, data, { headers });
       alert("Produit mis à jour avec succès ✅");
     } else {
-      await axios.post(API_URL, data, { headers });
+      await axiosInstance.post(API_URL, data, { headers });
       alert("Produit ajouté avec succès ✅");
     }
 
@@ -179,7 +179,7 @@ export default function ProductAdmin() {
                     <img
                       src={
                         p.images?.[0]
-                          ? `http://localhost:5000${p.images[0]}`
+                          ? p.images[0]
                           : "https://via.placeholder.com/60"
                       }
                       alt={p.name}

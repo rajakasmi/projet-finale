@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { useAuth } from "../../context/AuthContext";
 
-const API_URL = "http://localhost:5000/api/categories";
+const API_URL = "/categories";
 
 const CategoryAdmin = () => {
   const [categories, setCategories] = useState([]);
@@ -11,11 +12,12 @@ const CategoryAdmin = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { user } = useAuth();
 
   // ✅ Charger les catégories
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(API_URL);
+      const res = await axiosInstance.get(API_URL);
       setCategories(res.data);
     } catch (error) {
       console.error("Erreur lors du chargement des catégories :", error);
@@ -42,9 +44,10 @@ const CategoryAdmin = () => {
       formData.append("name", name);
       formData.append("description", description);
       images.forEach((img) => formData.append("images", img));
+            const token = user?.token || localStorage.getItem("token");
 
-      await axios.post(API_URL, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await axiosInstance.post(API_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" , Authorization: `Bearer ${token}` },
       });
 
       setName("");
@@ -64,7 +67,7 @@ const CategoryAdmin = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Supprimer cette catégorie ?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axiosInstance.delete(`${API_URL}/${id}`);
       fetchCategories();
       setMessage("🗑️ Catégorie supprimée avec succès !");
     } catch (error) {
@@ -136,7 +139,7 @@ const CategoryAdmin = () => {
               >
                 {cat.images?.length > 0 && (
                   <img
-                    src={`http://localhost:5000${cat.images[0]}`}
+                    src={cat.images[0]}
                     alt={cat.name}
                     className="h-40 w-full object-cover rounded-lg mb-3"
                   />

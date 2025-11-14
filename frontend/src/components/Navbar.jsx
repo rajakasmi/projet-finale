@@ -206,6 +206,12 @@ const [showDropdown, setShowDropdown] = useState(false);
                   >
                     Mon profil
                   </Link>
+                  <Link
+                    to="/myorders"
+                    className="block px-3 py-2 text-sm hover:bg-[#b48456]/10 text-gray-700 hover:text-[#b48456] rounded-md"
+                  >
+                    Mes orders
+                  </Link>
                   <button
                     onClick={logout}
                     className="flex items-center w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md"

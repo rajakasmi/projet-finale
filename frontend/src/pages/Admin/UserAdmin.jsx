@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 
-const API_URL = "http://127.0.0.1:5000/api/users";
+const API_URL = "/users";
  // 🔗 adapte selon ton backend
 
 export default function UserAdmin() {
@@ -17,7 +17,7 @@ export default function UserAdmin() {
 
       try {
               const token = user?.token || localStorage.getItem("token");
-        const res = await axios.get(API_URL,{
+        const res = await axiosInstance.get(API_URL,{
         headers: { Authorization: `Bearer ${token}` },
       });
         const admins = res.data.filter((user) => user.role === "client"); // 🧠 filtre uniquement les admins

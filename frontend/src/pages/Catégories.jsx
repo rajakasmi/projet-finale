@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 export default function Categories() {
@@ -11,7 +11,7 @@ export default function Categories() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/categories");
+        const res = await axiosInstance.get("/categories");
         setCategories(res.data);
       } catch (err) {
         setError("Impossible de charger les catégories pour le moment.");

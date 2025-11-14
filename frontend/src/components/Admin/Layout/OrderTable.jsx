@@ -1,13 +1,13 @@
 
 // src/admin/OrderTable.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../../api/axiosInstance";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
 import OrderModal from "./OrderModal";
 
-const API_URL = "http://localhost:5000/api/orders";
+const API_URL = "/orders";
 
 export default function OrderTable() {
   const [orders, setOrders] = useState([]);
@@ -18,7 +18,7 @@ export default function OrderTable() {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(API_URL, {
+      const res = await axiosInstance.get(API_URL, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrders(Array.isArray(res.data) ? res.data : res.data.orders || []);
@@ -35,7 +35,7 @@ export default function OrderTable() {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(
+      const res = await axiosInstance.put(
   `${API_URL}/${orderId}/status`,
   { status: newStatus },
   { headers: { Authorization: `Bearer ${token}` } }

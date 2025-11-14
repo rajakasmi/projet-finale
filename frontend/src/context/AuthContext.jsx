@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
@@ -27,8 +27,8 @@ export const AuthProvider = ({ children }) => {
 
         setUser({ ...decoded, token });
 
-        axios
-          .get("http://localhost:5000/api/users/profile", {
+        axiosInstance
+          .get("/users/profile", {
             headers: { Authorization: `Bearer ${token}` },
           })
           .then((res) => setUser({ ...res.data, token })) 
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
+      const res = await axiosInstance.post("/users/login", {
         email,
         password,
       });
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       if (!token) return null;
 
-      const res = await axios.get("http://localhost:5000/api/users/profile", {
+      const res = await axiosInstance.get("/users/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Utilisateur non connecté");
 
-      const res = await axios.put("http://localhost:5000/api/users/profile", updates, {
+      const res = await axiosInstance.put("/users/profile", updates, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

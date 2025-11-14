@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 import {
   BarChart,
   Bar,
@@ -18,10 +18,10 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 
-const API_URL_PRODUCTS = "http://localhost:5000/api/products";
-const API_URL_ORDERS = "http://localhost:5000/api/orders";
-const API_URL_USERS = "http://localhost:5000/api/users";
-const API_URL_CATEGORIES = "http://localhost:5000/api/categories";
+const API_URL_PRODUCTS = "/products";
+const API_URL_ORDERS = "/orders";
+const API_URL_USERS = "/users";
+const API_URL_CATEGORIES = "/categories";
 
 export default function DashboardAdmin() {
   const [products, setProducts] = useState([]);
@@ -36,10 +36,10 @@ export default function DashboardAdmin() {
         const token = localStorage.getItem("token");
 
         const [productsRes, ordersRes, usersRes, categoriesRes] = await Promise.all([
-          axios.get(API_URL_PRODUCTS),
-          axios.get(API_URL_ORDERS, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get(API_URL_USERS, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get(API_URL_CATEGORIES),
+          axiosInstance.get(API_URL_PRODUCTS),
+          axiosInstance.get(API_URL_ORDERS, { headers: { Authorization: `Bearer ${token}` } }),
+          axiosInstance.get(API_URL_USERS, { headers: { Authorization: `Bearer ${token}` } }),
+          axiosInstance.get(API_URL_CATEGORIES),
         ]);
 
         setProducts(productsRes.data);

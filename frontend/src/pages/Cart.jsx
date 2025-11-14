@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 export default function Cart() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { cartItems, updateQuantity, deleteItem } = useCart();
+  const { cartItems, updateQuantity,  removeFromCart} = useCart();
 
   // Calculate prices
   const calculateSubtotal = () =>
@@ -83,7 +83,7 @@ export default function Cart() {
                       ))}
                     </select>
                     <button
-                      onClick={() => deleteItem(item.id)}
+                      onClick={() =>  removeFromCart(item.id)}
                       className="text-gray-400 hover:text-red-500 text-xl"
                     >
                       ×

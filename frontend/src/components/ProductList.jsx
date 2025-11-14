@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 export default function ProductList() {
-  const { category, subcategory } = useParams(); 
+  const { category, subcategory } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`http://localhost:5000/api/products/${category}/${subcategory}`)
+    axiosInstance
+      .get(`/products/${category}/${subcategory}`)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -44,9 +44,10 @@ export default function ProductList() {
                 <img
                   src={
                     product.image
-                      ? `http://localhost:5000/uploads/${product.image}`
+                      ? product.image
                       : "https://via.placeholder.com/300x200?text=Image+non+disponible"
                   }
+
                   alt={product.name}
                   className="w-full h-52 object-cover"
                 />
