@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import axiosInstance from "../../api/axiosInstance";
 import { useData } from "../../context/DataContext";
-import { useAuth } from "../../context/AuthContext"; // ✅ Pour le token utilisateur
+import { useAuth } from "../../context/AuthContext"; 
 
 const API_URL = "/products";
 
@@ -80,6 +80,8 @@ export default function ProductAdmin() {
   const handleImageChange = (e) => {
     setFormData({ ...formData, images: e.target.files });
   };
+  
+  
 
   // ✅ Supprimer un produit
   const handleDelete = async (id) => {
@@ -99,13 +101,12 @@ export default function ProductAdmin() {
   e.preventDefault();
 
   const data = new FormData();
+
   Object.keys(formData).forEach((key) => {
     if (key === "images") {
-      for (let i = 0; i < formData.images.length; i++) {
-        data.append("images", formData.images[i]);
-      }
+      [...formData.images].forEach((file) => data.append("images", file));
     } else {
-      data.append(key, formData[key]);
+      data.append(key, formData[key] ?? "");
     }
   });
 
@@ -117,15 +118,19 @@ export default function ProductAdmin() {
     }
 
     const headers = {
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     };
 
     if (editingProduct) {
-      // ✅ utiliser put avec multipart form
-      await axiosInstance.put(`${API_URL}/${editingProduct._id}`, data, { headers });
+      await axiosInstance.put(`${API_URL}/${editingProduct._id}`, data, {
+        headers,
+      });
       alert("Produit mis à jour avec succès ✅");
     } else {
-      await axiosInstance.post(API_URL, data, { headers });
+      await axiosInstance.post(API_URL, data, {
+        headers,
+      });
       alert("Produit ajouté avec succès ✅");
     }
 
