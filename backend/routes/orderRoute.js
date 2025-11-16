@@ -4,15 +4,16 @@ const { createOrder, getOneOrder, getAllOrders, updateOrder, getMyOrders , updat
 const validateToken = require("../middlewares/validateToken");
 const { auth } = require("../middlewares/authRole");
 
+router.get("/",validateToken,auth , getAllOrders);
+router.put("/:id/status",validateToken, auth , updateOrderStatus);
+router.put("/:id",validateToken, auth , updateOrder);
 
 router.post("/",validateToken,  createOrder);
 router.get("/:id",validateToken, getOneOrder);
 router.get("/",validateToken, getMyOrders);
 
 
-router.get("/",validateToken,auth , getAllOrders);
-router.put("/:id/status",validateToken, auth , updateOrderStatus);
-router.put("/:id",validateToken, auth , updateOrder);
+
 
 
 module.exports = router;
