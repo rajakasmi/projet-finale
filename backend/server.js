@@ -23,7 +23,7 @@ const app = express();
 
 // Middleware
 app.use(cors(
-  { origin: 'http://localhost:5173', // Remplacez par l'URL de votre frontend
+  { origin: 'https://decostyle-62g9.onrender.com', // Remplacez par l'URL de votre frontend
     credentials: true }
 ));
 app.use(express.json());
