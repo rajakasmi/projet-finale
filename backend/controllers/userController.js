@@ -1,4 +1,4 @@
-const { User, validateRegister, validateLogin } = require("../models/User");
+const { User, validateRegister, validateLogin } = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
