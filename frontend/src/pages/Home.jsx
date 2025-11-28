@@ -3,6 +3,7 @@ import Carousel from '../components/Carousel'
 import Categories from './Catégories'
 import SaleSection from './SaleSection'
 import Features from './Feature'
+import { useEffect } from 'react'
 
 
 
