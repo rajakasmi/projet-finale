@@ -1,6 +1,9 @@
 import React from "react";
 
 export default function Contact() {
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
   return (
     <section className="bg-gray-50 min-h-screen py-16 px-6 mt-20">
       <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
