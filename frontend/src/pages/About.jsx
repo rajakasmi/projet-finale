@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 
+export default function About() { 
 
-export default function About() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
-    <section className="bg-gray-50 min-h-screen py-16 px-6 mt-20">
+    <section className="bg-gray-50 min-h-screen py-16 px-6">
       <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="grid md:grid-cols-2 items-center">
           {/* Image à gauche */}
@@ -30,9 +34,7 @@ export default function About() {
             <p className="text-gray-700 leading-relaxed mb-6">
               Notre mission est simple : rendre la décoration intérieure
               accessible à tous, tout en valorisant le savoir-faire artisanal et
-              les matériaux durables. Que vous soyez amateur de design moderne,
-              de style bohème ou d’ambiance naturelle, DecoStyle vous accompagne
-              pour transformer votre intérieur.
+              les matériaux durables.
             </p>
 
             <div className="bg-[#b48456] text-white rounded-lg p-6 mt-8 shadow-md">
@@ -48,7 +50,6 @@ export default function About() {
         </div>
       </div>
 
-      {/* Section équipe ou valeurs */}
       <div className="max-w-6xl mx-auto mt-20 text-center">
         <h3 className="text-3xl font-bold text-gray-800 mb-6">
           Une équipe passionnée par la décoration
