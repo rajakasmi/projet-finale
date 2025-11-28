@@ -1,14 +1,16 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 export default function Contact() {
+
   useEffect(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, []);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
-    <section className="bg-gray-50 min-h-screen py-16 px-6 mt-20">
+    <section className="bg-gray-50 min-h-screen py-16 px-6">
       <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="grid md:grid-cols-2">
+
           {/* Section gauche : informations */}
           <div className="bg-[#b48456] text-white p-10 flex flex-col justify-center">
             <h2 className="text-3xl font-bold mb-6">Contactez-nous</h2>
@@ -17,15 +19,9 @@ export default function Contact() {
               devis ? Notre équipe DecoStyle est à votre écoute.
             </p>
             <ul className="space-y-4 text-base">
-              <li>
-                📍 <strong>Adresse :</strong> 12 Rue des Artisans, Tunis
-              </li>
-              <li>
-                📞 <strong>Téléphone :</strong> +216 22 345 678
-              </li>
-              <li>
-                ✉️ <strong>Email :</strong> contact@decostyle.com
-              </li>
+              <li>📍 <strong>Adresse :</strong> 12 Rue des Artisans, Tunis</li>
+              <li>📞 <strong>Téléphone :</strong> +216 22 345 678</li>
+              <li>✉️ <strong>Email :</strong> contact@decostyle.com</li>
             </ul>
             <div className="mt-8 flex gap-4">
               <a
@@ -90,6 +86,7 @@ export default function Contact() {
               </button>
             </form>
           </div>
+
         </div>
       </div>
     </section>
