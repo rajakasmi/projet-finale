@@ -53,7 +53,7 @@ export default function Categories() {
               onClick={() => navigate(`/categories/${cat.name}`)}
               className="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden"
             >
-              <div className="grid grid-cols-2">
+              <div className="grid">
                 {Array.isArray(cat.images) && cat.images.length > 0 ? (
                   cat.images.map((img, index) => (
                     <img
